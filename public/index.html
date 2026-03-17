@@ -4,6 +4,7 @@
 <head>
 
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parental Benefit Calculator</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,7 +14,7 @@
 
 <body class="bg-gray-100 font-sans dark:bg-gray-900 dark:text-white">
 
-    <div class="max-w-5xl mx-auto mt-10 bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
+    <div class="max-w-5xl mx-auto mt-4 md:mt-10 bg-white dark:bg-gray-800 p-4 md:p-8 rounded-xl shadow-lg">
 
         <div class="flex justify-between items-center mb-8">
 
@@ -92,22 +93,26 @@
 
         <h2 id="paymentsTitle" class="text-xl font-semibold mb-4"></h2>
 
-        <table class="w-full border">
+        <div class="overflow-x-auto">
 
-            <thead class="bg-gray-200 dark:bg-gray-700">
+            <table class="w-full border min-w-[560px]">
 
-                <tr>
-                    <th id="monthHeader" class="p-2"></th>
-                    <th id="yearHeader" class="p-2"></th>
-                    <th id="daysHeader" class="p-2"></th>
-                    <th id="paymentHeader" class="p-2"></th>
-                </tr>
+                <thead class="bg-gray-200 dark:bg-gray-700">
 
-            </thead>
+                    <tr>
+                        <th id="monthHeader" class="p-2"></th>
+                        <th id="yearHeader" class="p-2"></th>
+                        <th id="daysHeader" class="p-2"></th>
+                        <th id="paymentHeader" class="p-2"></th>
+                    </tr>
 
-            <tbody id="results"></tbody>
+                </thead>
 
-        </table>
+                <tbody id="results"></tbody>
+
+            </table>
+
+        </div>
 
         <h3 id="total" class="text-right font-bold mt-3"></h3>
 

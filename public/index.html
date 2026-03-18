@@ -209,10 +209,12 @@
                 statusNotFound: "No saved application was found with ID #{id}.",
                 statusSaveError: "Saving failed. Please try again.",
                 statusLoadError: "Loading failed. Please try again.",
+                statusCalculateError: "Calculation failed. Please check input values and try again.",
+                statusPdfError: "PDF generation failed. Please try again.",
                 statusIdCopied: "Application ID #{id} copied to clipboard.",
-                    statusNoLocalSave: "No previously saved application ID was found on this device.",
-                    statusMissingApplicationId: "Enter an application ID before loading.",
-                    statusCopyError: "Copying the application ID failed. Please copy it manually."
+                statusNoLocalSave: "No previously saved application ID was found on this device.",
+                statusMissingApplicationId: "Enter an application ID before loading.",
+                statusCopyError: "Copying the application ID failed. Please copy it manually."
 
             },
 
@@ -253,10 +255,12 @@
                 statusNotFound: "Avaldust ID-ga #{id} ei leitud.",
                 statusSaveError: "Salvestamine ebaõnnestus. Proovi uuesti.",
                 statusLoadError: "Laadimine ebaõnnestus. Proovi uuesti.",
+                statusCalculateError: "Arvutamine ebaõnnestus. Kontrolli sisendväärtusi ja proovi uuesti.",
+                statusPdfError: "PDF loomine ebaõnnestus. Proovi uuesti.",
                 statusIdCopied: "Avalduse ID #{id} on kopeeritud lõikelauale.",
-                    statusNoLocalSave: "Selles seadmes ei leitud varem salvestatud avalduse ID-d.",
-                    statusMissingApplicationId: "Sisesta enne laadimist avalduse ID.",
-                    statusCopyError: "Avalduse ID kopeerimine ebaõnnestus. Kopeeri ID käsitsi."
+                statusNoLocalSave: "Selles seadmes ei leitud varem salvestatud avalduse ID-d.",
+                statusMissingApplicationId: "Sisesta enne laadimist avalduse ID.",
+                statusCopyError: "Avalduse ID kopeerimine ebaõnnestus. Kopeeri ID käsitsi."
 
             }
 
@@ -430,6 +434,30 @@
 
         }
 
+        async function readApiErrorMessage(response, fallbackMessage) {
+
+            try {
+
+                const payload = await response.json()
+
+                if (payload && Array.isArray(payload.details) && payload.details.length > 0) {
+                    return payload.details.join(" ")
+                }
+
+                if (payload && payload.error) {
+                    return payload.error
+                }
+
+                return fallbackMessage
+
+            } catch (error) {
+
+                return fallbackMessage
+
+            }
+
+        }
+
         async function calculate() {
 
             const { salary, birthDateRaw } = getFormValues()
@@ -438,13 +466,32 @@
 
             const birthDate = convertDate(birthDateRaw)
 
-            const response = await fetch("/calculate", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ salary, birthDate })
-            })
+            let data
 
-            const data = await response.json()
+            try {
+
+                const response = await fetch("/calculate", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ salary, birthDate })
+                })
+
+                if (!response.ok) {
+                    setStatus(
+                        await readApiErrorMessage(response, translations[currentLanguage].statusCalculateError),
+                        "error"
+                    )
+                    return
+                }
+
+                data = await response.json()
+
+            } catch (error) {
+
+                setStatus(translations[currentLanguage].statusCalculateError, "error")
+                return
+
+            }
 
             const table = document.getElementById("results")
             table.innerHTML = ""
@@ -529,24 +576,40 @@
 
             const birthDate = convertDate(birthDateRaw)
 
-            const response = await fetch("/pdf", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    salary,
-                    birthDate,
-                    lang: currentLanguage
+            try {
+
+                const response = await fetch("/pdf", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        salary,
+                        birthDate,
+                        lang: currentLanguage
+                    })
                 })
-            })
 
-            const blob = await response.blob()
+                if (!response.ok) {
+                    setStatus(
+                        await readApiErrorMessage(response, translations[currentLanguage].statusPdfError),
+                        "error"
+                    )
+                    return
+                }
 
-            const url = window.URL.createObjectURL(blob)
+                const blob = await response.blob()
 
-            const a = document.createElement("a")
-            a.href = url
-            a.download = "benefits.pdf"
-            a.click()
+                const url = window.URL.createObjectURL(blob)
+
+                const a = document.createElement("a")
+                a.href = url
+                a.download = "benefits.pdf"
+                a.click()
+
+            } catch (error) {
+
+                setStatus(translations[currentLanguage].statusPdfError, "error")
+
+            }
 
         }
 
@@ -570,7 +633,11 @@
                 })
 
                 if (!response.ok) {
-                    throw new Error("Failed to save application")
+                    setStatus(
+                        await readApiErrorMessage(response, translations[currentLanguage].statusSaveError),
+                        "error"
+                    )
+                    return
                 }
 
                 const data = await response.json()
@@ -633,7 +700,11 @@
                 }
 
                 if (!response.ok) {
-                    throw new Error("Failed to load application")
+                    setStatus(
+                        await readApiErrorMessage(response, translations[currentLanguage].statusLoadError),
+                        "error"
+                    )
+                    return
                 }
 
                 const data = await response.json()

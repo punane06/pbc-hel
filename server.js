@@ -6,6 +6,7 @@ const PDFDocument = require("pdfkit");
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
+const MAX_ALLOWED_SALARY = 50000;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -68,6 +69,64 @@ function parseDate(dateString) {
 
 }
 
+function isValidDateString(dateString) {
+
+    if (typeof dateString !== "string") return false;
+
+    const match = dateString.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+
+    if (!match) return false;
+
+    const day = Number(match[1]);
+    const month = Number(match[2]);
+    const year = Number(match[3]);
+
+    const parsedDate = new Date(year, month - 1, day);
+
+    return (
+        parsedDate.getFullYear() === year &&
+        parsedDate.getMonth() === month - 1 &&
+        parsedDate.getDate() === day
+    );
+
+}
+
+function validateCalculationInput(payload) {
+
+    const salary = Number(payload.salary);
+    const birthDate = payload.birthDate;
+
+    const errors = [];
+
+    if (!Number.isFinite(salary) || salary <= 0) {
+        errors.push("Salary must be a positive number.");
+    }
+
+    if (salary > MAX_ALLOWED_SALARY) {
+        errors.push(`Salary is too large. Maximum allowed value is ${MAX_ALLOWED_SALARY}.`);
+    }
+
+    if (!isValidDateString(birthDate)) {
+        errors.push("Birth date must be a valid date in dd.mm.yyyy format.");
+    }
+
+    return {
+        errors,
+        salary,
+        birthDate
+    };
+
+}
+
+function sendValidationError(res, errors) {
+
+    res.status(400).json({
+        error: "Validation failed",
+        details: errors
+    });
+
+}
+
 function calculateBenefits(salary, birthDate) {
 
     const cappedSalary = Math.min(salary, 4000);
@@ -118,15 +177,25 @@ function formatCurrency(v) {
 
 app.post("/calculate", (req, res) => {
 
-    const { salary, birthDate } = req.body;
+    const { errors, salary, birthDate } = validateCalculationInput(req.body || {});
 
-    res.json(calculateBenefits(Number(salary), birthDate));
+    if (errors.length > 0) {
+        sendValidationError(res, errors);
+        return;
+    }
+
+    res.json(calculateBenefits(salary, birthDate));
 
 });
 
 app.post("/save", (req, res) => {
 
-    const { salary, birthDate } = req.body;
+    const { errors, salary, birthDate } = validateCalculationInput(req.body || {});
+
+    if (errors.length > 0) {
+        sendValidationError(res, errors);
+        return;
+    }
 
     db.run(
         "INSERT INTO applications (salary,birthDate) VALUES (?,?)",
@@ -146,9 +215,16 @@ app.post("/save", (req, res) => {
 
 app.get("/load/:id", (req, res) => {
 
+    const id = Number(req.params.id);
+
+    if (!Number.isInteger(id) || id < 1) {
+        sendValidationError(res, ["Application ID must be a positive integer."]);
+        return;
+    }
+
     db.get(
         "SELECT * FROM applications WHERE id=?",
-        [req.params.id],
+        [id],
         (err, row) => {
 
             if (err) {
@@ -169,7 +245,13 @@ app.get("/load/:id", (req, res) => {
 
 app.post("/pdf", (req, res) => {
 
-    const { salary, birthDate, lang } = req.body;
+    const { errors, salary, birthDate } = validateCalculationInput(req.body || {});
+    const { lang } = req.body || {};
+
+    if (errors.length > 0) {
+        sendValidationError(res, errors);
+        return;
+    }
 
     const language = lang === "et" ? "et" : "en";
 
@@ -177,7 +259,7 @@ app.post("/pdf", (req, res) => {
 
     const months = language === "et" ? monthsET : monthsEN;
 
-    const data = calculateBenefits(Number(salary), birthDate);
+    const data = calculateBenefits(salary, birthDate);
 
     const today = new Date().toISOString().split("T")[0];
 

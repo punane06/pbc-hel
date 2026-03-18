@@ -156,6 +156,11 @@ app.get("/load/:id", (req, res) => {
                 return;
             }
 
+            if (!row) {
+                res.status(404).json({ error: "Application not found" });
+                return;
+            }
+
             res.json(row);
 
         });

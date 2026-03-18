@@ -1,10 +1,10 @@
 const sqlite3 = require("sqlite3").verbose();
 
-const db = new sqlite3.Database("./benefits.db");
+function initializeSchema(db) {
 
-db.serialize(() => {
+    db.serialize(() => {
 
-    db.run(`
+        db.run(`
         CREATE TABLE IF NOT EXISTS applications (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             salary REAL,
@@ -12,6 +12,21 @@ db.serialize(() => {
         )
     `);
 
-});
+    });
 
-module.exports = db;
+    return db;
+
+}
+
+function createDatabase(dbPath = process.env.DB_PATH || "./benefits.db") {
+
+    const db = new sqlite3.Database(dbPath);
+
+    return initializeSchema(db);
+
+}
+
+module.exports = {
+    createDatabase,
+    initializeSchema
+};

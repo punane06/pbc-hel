@@ -42,6 +42,7 @@
                     placeholder="3000">
 
                 <p id="salaryHelp" class="text-sm text-gray-500 mt-1"></p>
+                <p id="salaryError" class="hidden text-sm text-rose-600 mt-1"></p>
 
             </div>
 
@@ -52,6 +53,7 @@
                 <input id="birthDate" type="date" class="w-full p-3 border rounded-lg text-black mt-1">
 
                 <p id="birthHelp" class="text-sm text-gray-500 mt-1"></p>
+                <p id="birthError" class="hidden text-sm text-rose-600 mt-1"></p>
 
             </div>
 
@@ -96,6 +98,7 @@
                     placeholder="1">
 
                 <p id="restoreHelp" class="text-sm text-gray-500 mt-1"></p>
+                <p id="applicationIdError" class="hidden text-sm text-rose-600 mt-1"></p>
 
             </div>
 
@@ -210,6 +213,9 @@
                 capYes: "Yes",
                 capNo: "No",
                 statusMissingFields: "Enter salary and birth date before saving or calculating.",
+                salaryRequired: "Enter a gross monthly salary.",
+                salaryInvalid: "Salary must be a positive number.",
+                birthDateRequired: "Select the baby's birth date.",
                 statusSaved: "Progress saved. Application ID: {id}. Enter this ID below and select \"Load Saved Application\" to continue later.",
                 statusLoaded: "Saved application #{id} loaded successfully.",
                 statusNotFound: "No saved application was found with ID #{id}.",
@@ -260,6 +266,9 @@
                 capYes: "Jah",
                 capNo: "Ei",
                 statusMissingFields: "Sisesta enne salvestamist või arvutamist palk ja sünnikuupäev.",
+                salaryRequired: "Sisesta brutokuupalk.",
+                salaryInvalid: "Palk peab olema positiivne number.",
+                birthDateRequired: "Vali lapse sünnikuupäev.",
                 statusSaved: "Andmed on salvestatud. Avalduse ID: {id}. Hiljem jätkamiseks sisesta ID allpool ja vajuta \"Laadi salvestatud avaldus\".",
                 statusLoaded: "Salvestatud avaldus #{id} on edukalt laaditud.",
                 statusNotFound: "Avaldust ID-ga #{id} ei leitud.",
@@ -369,6 +378,67 @@
                 salary: document.getElementById("salary").value,
                 birthDateRaw: document.getElementById("birthDate").value
             }
+
+        }
+
+        function setFieldError(fieldId, message = "") {
+
+            const input = document.getElementById(fieldId)
+            const error = document.getElementById(`${fieldId}Error`)
+
+            if (!message) {
+                input.classList.remove("border-rose-500", "ring-1", "ring-rose-200")
+                input.removeAttribute("aria-invalid")
+                error.innerText = ""
+                error.classList.add("hidden")
+                return
+            }
+
+            input.classList.add("border-rose-500", "ring-1", "ring-rose-200")
+            input.setAttribute("aria-invalid", "true")
+            error.innerText = message
+            error.classList.remove("hidden")
+
+        }
+
+        function validateCalculationFields() {
+
+            const t = translations[currentLanguage]
+            const { salary, birthDateRaw } = getFormValues()
+            let isValid = true
+
+            setFieldError("salary")
+            setFieldError("birthDate")
+
+            if (!salary) {
+                setFieldError("salary", t.salaryRequired)
+                isValid = false
+            } else if (Number(salary) <= 0) {
+                setFieldError("salary", t.salaryInvalid)
+                isValid = false
+            }
+
+            if (!birthDateRaw) {
+                setFieldError("birthDate", t.birthDateRequired)
+                isValid = false
+            }
+
+            return isValid
+
+        }
+
+        function validateApplicationIdField() {
+
+            const applicationId = document.getElementById("applicationId").value.trim()
+
+            setFieldError("applicationId")
+
+            if (!applicationId) {
+                setFieldError("applicationId", translations[currentLanguage].statusMissingApplicationId)
+                return false
+            }
+
+            return true
 
         }
 
@@ -485,6 +555,8 @@
 
             if (!salary || !birthDateRaw) return
 
+            if (!validateCalculationFields()) return
+
             const birthDate = convertDate(birthDateRaw)
             const requestId = ++latestCalculationRequestId
 
@@ -600,7 +672,10 @@
 
             const { salary, birthDateRaw } = getFormValues()
 
-            if (!salary || !birthDateRaw) return
+            if (!salary || !birthDateRaw || !validateCalculationFields()) {
+                setStatus(translations[currentLanguage].statusMissingFields, "error")
+                return
+            }
 
             const birthDate = convertDate(birthDateRaw)
 
@@ -651,7 +726,7 @@
 
             const { salary, birthDateRaw } = getFormValues()
 
-            if (!salary || !birthDateRaw) {
+            if (!salary || !birthDateRaw || !validateCalculationFields()) {
                 setStatus(translations[currentLanguage].statusMissingFields, "error")
                 return
             }
@@ -705,7 +780,7 @@
 
             const applicationId = document.getElementById("applicationId").value.trim()
 
-            if (!applicationId) {
+            if (!validateApplicationIdField()) {
                 setStatus(translations[currentLanguage].statusMissingApplicationId, "error")
                 return
             }
@@ -797,8 +872,17 @@
 
         }
 
-        document.getElementById("salary").addEventListener("input", calculate)
-        document.getElementById("birthDate").addEventListener("input", calculate)
+        document.getElementById("salary").addEventListener("input", () => {
+            setFieldError("salary")
+            calculate()
+        })
+        document.getElementById("birthDate").addEventListener("input", () => {
+            setFieldError("birthDate")
+            calculate()
+        })
+        document.getElementById("applicationId").addEventListener("input", () => {
+            setFieldError("applicationId")
+        })
         document.getElementById("applicationId").addEventListener("keydown", async (event) => {
             if (event.key === "Enter") {
                 event.preventDefault()

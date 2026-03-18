@@ -1,6 +1,8 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 
+process.env.DB_PATH = ":memory:";
+
 const {
     calculateBenefits,
     isValidDateString,

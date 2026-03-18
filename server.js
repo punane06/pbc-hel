@@ -1,8 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const sqlite3 = require("sqlite3").verbose();
 const PDFDocument = require("pdfkit");
+const { createDatabase } = require("./database");
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
@@ -12,17 +12,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static("public"));
 
-const db = new sqlite3.Database("./benefits.db");
-
-db.serialize(() => {
-    db.run(`
-CREATE TABLE IF NOT EXISTS applications (
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-salary REAL,
-birthDate TEXT
-)
-`);
-});
+const db = createDatabase();
 
 const monthsEN = [
     "January", "February", "March", "April", "May", "June",
@@ -353,6 +343,7 @@ if (require.main === module) {
 
 module.exports = {
     app,
+    db,
     startServer,
     parseDate,
     isValidDateString,

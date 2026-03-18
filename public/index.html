@@ -210,7 +210,9 @@
                 statusSaveError: "Saving failed. Please try again.",
                 statusLoadError: "Loading failed. Please try again.",
                 statusIdCopied: "Application ID #{id} copied to clipboard.",
-                statusNoLocalSave: "No previously saved application ID was found on this device."
+                    statusNoLocalSave: "No previously saved application ID was found on this device.",
+                    statusMissingApplicationId: "Enter an application ID before loading.",
+                    statusCopyError: "Copying the application ID failed. Please copy it manually."
 
             },
 
@@ -252,7 +254,9 @@
                 statusSaveError: "Salvestamine ebaõnnestus. Proovi uuesti.",
                 statusLoadError: "Laadimine ebaõnnestus. Proovi uuesti.",
                 statusIdCopied: "Avalduse ID #{id} on kopeeritud lõikelauale.",
-                statusNoLocalSave: "Selles seadmes ei leitud varem salvestatud avalduse ID-d."
+                    statusNoLocalSave: "Selles seadmes ei leitud varem salvestatud avalduse ID-d.",
+                    statusMissingApplicationId: "Sisesta enne laadimist avalduse ID.",
+                    statusCopyError: "Avalduse ID kopeerimine ebaõnnestus. Kopeeri ID käsitsi."
 
             }
 
@@ -595,14 +599,14 @@
             const applicationId = document.getElementById("applicationId").value.trim()
 
             if (!applicationId) {
-                setStatus(translations[currentLanguage].statusLoadError, "error")
+                setStatus(translations[currentLanguage].statusMissingApplicationId, "error")
                 return
             }
 
             await loadApplicationById(applicationId)
 
         }
-
+                        setStatus(translations[currentLanguage].statusCopyError, "error")
         async function loadLastSavedApplication() {
 
             const applicationId = localStorage.getItem("lastSavedApplicationId")

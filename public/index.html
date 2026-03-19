@@ -192,6 +192,69 @@
 
         </div>
 
+        </form>
+
+        <h2 id="summaryTitle" class="text-xl font-semibold mb-4"></h2>
+
+        <div id="summary" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 hidden">
+
+            <div class="bg-blue-100 p-4 rounded-lg text-center text-black">
+                <p id="salaryCardLabel" class="text-sm"></p>
+                <p id="summarySalary" class="font-bold"></p>
+            </div>
+
+            <div class="bg-blue-100 p-4 rounded-lg text-center text-black">
+                <p id="dailyCardLabel" class="text-sm"></p>
+                <p id="summaryDaily" class="font-bold"></p>
+            </div>
+
+            <div class="bg-blue-100 p-4 rounded-lg text-center text-black">
+                <p id="capCardLabel" class="text-sm"></p>
+                <p id="summaryCap" class="font-bold"></p>
+            </div>
+
+            <div class="bg-blue-100 p-4 rounded-lg text-center text-black">
+                <p id="totalCardLabel" class="text-sm"></p>
+                <p id="summaryTotal" class="font-bold"></p>
+            </div>
+
+        </div>
+
+        <h2 id="paymentsTitle" class="text-xl font-semibold mb-4"></h2>
+
+        <div class="overflow-x-auto">
+
+            <table class="w-full border min-w-[560px]">
+
+                <caption id="paymentsCaption" class="sr-only">Parental benefit payments by month</caption>
+
+                <thead class="bg-gray-200 dark:bg-gray-700">
+
+                    <tr>
+                        <th id="monthHeader" scope="col" class="p-2"></th>
+                        <th id="yearHeader" scope="col" class="p-2"></th>
+                        <th id="daysHeader" scope="col" class="p-2"></th>
+                        <th id="paymentHeader" scope="col" class="p-2"></th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="results"></tbody>
+
+            </table>
+
+        </div>
+
+        <h3 id="total" class="text-right font-bold mt-3"></h3>
+
+        <h2 id="chartTitle" class="text-xl font-semibold mt-10 mb-4"></h2>
+
+        <canvas id="benefitChart" role="img" aria-label="Monthly parental benefit bar chart"
+            aria-describedby="chartSummary"></canvas>
+        <p id="chartSummary" class="sr-only" aria-live="polite"></p>
+
+        </div>
+
     </main>
 
     <script>
@@ -242,6 +305,7 @@
                 payment: "Payment (€)",
                 paymentsCaption: "Parental benefit payments by month",
                 chart: "Benefit Chart",
+                chartSummaryTemplate: "Chart summary: highest monthly payment is {maxPayment} in {maxMonth}. Total benefit is {total}.",
                 capYes: "Yes",
                 capNo: "No",
                 statusMissingFields: "Enter salary and birth date before saving or calculating.",
@@ -302,6 +366,7 @@
                 payment: "Väljamakse (€)",
                 paymentsCaption: "Vanemahüvitise väljamaksed kuude kaupa",
                 chart: "Väljamaksete graafik",
+                chartSummaryTemplate: "Graafiku kokkuvõte: suurim kuumakse on {maxPayment} kuus {maxMonth}. Vanemahüvitise kogusumma on {total}.",
                 capYes: "Jah",
                 capNo: "Ei",
                 statusMissingFields: "Sisesta enne salvestamist või arvutamist palk ja sünnikuupäev.",
@@ -533,7 +598,10 @@
             }
 
             statusMessage.classList.remove("hidden")
-            statusMessage.focus({ preventScroll: true })
+
+            if (options.focus) {
+                statusMessage.focus({ preventScroll: true })
+            }
 
         }
 
@@ -545,6 +613,23 @@
             button.disabled = isLoading
             button.setAttribute("aria-busy", String(isLoading))
             button.innerText = isLoading ? translation[loadingKey] : translation[idleKey]
+
+        }
+
+        function updateChartSummary(labels, payments, total) {
+
+            if (!labels.length || !payments.length) return
+
+            const maxPayment = Math.max(...payments)
+            const maxIndex = payments.indexOf(maxPayment)
+            const maxMonth = labels[maxIndex]
+
+            const summary = translations[currentLanguage].chartSummaryTemplate
+                .replace("{maxPayment}", formatCurrency(maxPayment))
+                .replace("{maxMonth}", maxMonth)
+                .replace("{total}", formatCurrency(total))
+
+            document.getElementById("chartSummary").innerText = summary
 
         }
 
@@ -716,6 +801,7 @@
             document.getElementById("summary").classList.remove("hidden")
 
             renderChart(labels, payments)
+            updateChartSummary(labels, payments, total)
 
         }
 
@@ -747,7 +833,7 @@
             const { salary, birthDateRaw } = getFormValues()
 
             if (!salary || !birthDateRaw || !validateCalculationFields()) {
-                setStatus(translations[currentLanguage].statusMissingFields, "error")
+                setStatus(translations[currentLanguage].statusMissingFields, "error", { focus: true })
                 return
             }
 
@@ -770,7 +856,8 @@
                 if (!response.ok) {
                     setStatus(
                         await readApiErrorMessage(response, translations[currentLanguage].statusPdfError),
-                        "error"
+                        "error",
+                        { focus: true }
                     )
                     return
                 }
@@ -786,7 +873,7 @@
 
             } catch (error) {
 
-                setStatus(translations[currentLanguage].statusPdfError, "error")
+                setStatus(translations[currentLanguage].statusPdfError, "error", { focus: true })
 
             } finally {
 
@@ -801,7 +888,7 @@
             const { salary, birthDateRaw } = getFormValues()
 
             if (!salary || !birthDateRaw || !validateCalculationFields()) {
-                setStatus(translations[currentLanguage].statusMissingFields, "error")
+                setStatus(translations[currentLanguage].statusMissingFields, "error", { focus: true })
                 return
             }
 
@@ -820,7 +907,8 @@
                 if (!response.ok) {
                     setStatus(
                         await readApiErrorMessage(response, translations[currentLanguage].statusSaveError),
-                        "error"
+                        "error",
+                        { focus: true }
                     )
                     return
                 }
@@ -835,12 +923,12 @@
                 setStatus(
                     translations[currentLanguage].statusSaved.replace("{id}", applicationId),
                     "success",
-                    { copyId: applicationId }
+                    { copyId: applicationId, focus: true }
                 )
 
             } catch (error) {
 
-                setStatus(translations[currentLanguage].statusSaveError, "error")
+                setStatus(translations[currentLanguage].statusSaveError, "error", { focus: true })
 
             } finally {
 
@@ -855,7 +943,7 @@
             const applicationId = document.getElementById("applicationId").value.trim()
 
             if (!validateApplicationIdField()) {
-                setStatus(translations[currentLanguage].statusMissingApplicationId, "error")
+                setStatus(translations[currentLanguage].statusMissingApplicationId, "error", { focus: true })
                 return
             }
 
@@ -868,7 +956,7 @@
             const applicationId = localStorage.getItem("lastSavedApplicationId")
 
             if (!applicationId) {
-                setStatus(translations[currentLanguage].statusNoLocalSave, "info")
+                setStatus(translations[currentLanguage].statusNoLocalSave, "info", { focus: true })
                 return
             }
 
@@ -887,14 +975,15 @@
                 const response = await fetch(`/load/${applicationId}`)
 
                 if (response.status === 404) {
-                    setStatus(translations[currentLanguage].statusNotFound.replace("{id}", applicationId), "error")
+                    setStatus(translations[currentLanguage].statusNotFound.replace("{id}", applicationId), "error", { focus: true })
                     return
                 }
 
                 if (!response.ok) {
                     setStatus(
                         await readApiErrorMessage(response, translations[currentLanguage].statusLoadError),
-                        "error"
+                        "error",
+                        { focus: true }
                     )
                     return
                 }
@@ -911,11 +1000,11 @@
 
                 await calculate()
 
-                setStatus(translations[currentLanguage].statusLoaded.replace("{id}", data.id), "success")
+                setStatus(translations[currentLanguage].statusLoaded.replace("{id}", data.id), "success", { focus: true })
 
             } catch (error) {
 
-                setStatus(translations[currentLanguage].statusLoadError, "error")
+                setStatus(translations[currentLanguage].statusLoadError, "error", { focus: true })
 
             } finally {
 

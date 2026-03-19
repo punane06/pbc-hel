@@ -256,13 +256,31 @@ Notes:
 
 ---
 
+## Continuous Integration
+
+Tests run automatically on every push and pull request via **Gitea Actions**:
+
+- Workflow: `.gitea/workflows/test.yml`
+- Triggers: `main`, `develop`, and `feat/**` branches
+- Actions:
+  1. Checkout code
+  2. Setup Node.js 20.x
+  3. Install dependencies (cached)
+  4. Run test suite (`npm test`)
+  5. Report results
+
+All 13 tests must pass before merging to `main`.
+
+---
+
 ## Possible Improvements
 
 With more time the following could be added:
 
-- CI pipeline for test automation
 - stronger accessibility polish (keyboard and screen reader audit)
-- additional benefit rules
+- additional benefit rules (income cap, marital status, etc.)
+- test coverage reporting
+- automated deployment to staging environment
 
 ---
 

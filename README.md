@@ -200,7 +200,13 @@ npm start
 
 Optional custom port:
 
+Linux/macOS:
+
 PORT=3001 npm start
+
+Windows PowerShell:
+
+$env:PORT=3001; npm start
 
 ### 3 Open in browser
 
@@ -209,6 +215,28 @@ http://localhost:3000 (or your custom `PORT`)
 ### 4 Run tests
 
 npm test
+
+---
+
+## Run with Docker
+
+### 1 Build image
+
+docker build -t parental-benefit-calculator .
+
+### 2 Run container
+
+docker run --rm -p 3000:3000 -v parental-benefit-data:/app/data parental-benefit-calculator
+
+### 3 Open in browser
+
+http://localhost:3000
+
+Notes:
+
+- database is persisted in Docker volume `parental-benefit-data`
+- app uses `DB_PATH=/app/data/benefits.db` inside container
+- to stop container, press `Ctrl+C`
 
 ---
 
@@ -232,7 +260,6 @@ npm test
 
 With more time the following could be added:
 
-- Docker container for easy deployment
 - CI pipeline for test automation
 - stronger accessibility polish (keyboard and screen reader audit)
 - additional benefit rules

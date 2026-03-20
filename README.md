@@ -83,6 +83,7 @@ A **bar chart** visualises monthly benefit payments.
 
 - Unit tests for core calculation and validation logic
 - API tests for calculate/save/load/pdf endpoints
+- Accessibility regression tests for semantic HTML and ARIA correctness
 
 ---
 
@@ -174,6 +175,7 @@ monthly payment = daily rate × number of paid days
 - there is no authentication, so saved applications are accessed only by application ID
 - persistence is local to the SQLite database file used in the runtime environment
 - frontend tests are not included yet; current automated coverage focuses on backend calculation and API behaviour
+- frontend tests are not included; current automated coverage focuses on backend calculation, API behaviour and accessibility regression
 
 ---
 
@@ -181,10 +183,11 @@ monthly payment = daily rate × number of paid days
 
 Topics we would be ready to discuss in a technical interview:
 
-- why we prioritised requirement coverage first, then validation, then automated tests
+- how we prioritised requirement coverage first, then validation, then automated tests
 - how save/load UX was simplified to reduce user confusion
 - how input validation is split between UX-friendly frontend feedback and backend contract enforcement
-- what we would improve next with more time: accessibility audit, CI pipeline, Docker setup and broader rule coverage
+- how accessibility requirements were addressed systematically (skip links, ARIA, focus management, screen reader support)
+- what we would improve next with more time: additional benefit rules, CI coverage reporting and Docker deployment pipeline
 
 ---
 
@@ -215,6 +218,10 @@ http://localhost:3000 (or your custom `PORT`)
 ### 4 Run tests
 
 npm test
+
+### 5 Run tests with coverage
+
+npm run coverage
 
 ---
 
@@ -267,9 +274,35 @@ Tests run automatically on every push and pull request via **Gitea Actions**:
   2. Setup Node.js 20.x
   3. Install dependencies (cached)
   4. Run test suite (`npm test`)
-  5. Report results
+  5. Run coverage report (`npm run coverage`)
+  6. Report results
 
-All 13 tests must pass before merging to `main`.
+All 17 tests must pass before merging to `main`.
+
+---
+
+## Continuous Deployment
+
+On every push to `main`, the application is automatically deployed to staging via **Gitea Actions**:
+
+- Workflow: `.gitea/workflows/deploy.yml`
+- Triggers: push to `main`
+- Actions:
+  1. Build Docker image
+  2. Push image to container registry
+  3. SSH into staging server
+  4. Pull latest image and restart container
+
+**Required Gitea secrets:**
+
+| Secret | Description |
+|---|---|
+| `REGISTRY_URL` | Container registry URL |
+| `REGISTRY_USER` | Registry username |
+| `REGISTRY_PASSWORD` | Registry password |
+| `STAGING_HOST` | Staging server hostname or IP |
+| `STAGING_USER` | SSH username |
+| `STAGING_SSH_KEY` | SSH private key |
 
 ---
 
@@ -277,7 +310,6 @@ All 13 tests must pass before merging to `main`.
 
 With more time the following could be added:
 
-- stronger accessibility polish (keyboard and screen reader audit)
 - additional benefit rules (income cap, marital status, etc.)
 - test coverage reporting
 - automated deployment to staging environment

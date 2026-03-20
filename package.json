@@ -6,7 +6,8 @@
     "type": "commonjs",
     "scripts": {
         "start": "node server.js",
-        "test": "node --test"
+        "test": "node --test",
+        "coverage": "node --test --experimental-test-coverage"
     },
     "dependencies": {
         "body-parser": "^1.20.2",

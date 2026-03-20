@@ -30,6 +30,9 @@ jobs:
       - name: Run tests
         run: npm test
       
+      - name: Run coverage report
+        run: npm run coverage
+
       - name: Test result summary
         if: always()
         run: echo "Tests completed"

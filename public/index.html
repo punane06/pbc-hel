@@ -16,7 +16,7 @@
 
     <a id="skipToContent" href="#main-content"
         class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-white focus:px-3 focus:py-2 focus:text-black focus:shadow-lg">
-        Skip to main content
+        Liigu põhisisu juurde
     </a>
 
     <main id="main-content" tabindex="-1">
@@ -25,25 +25,27 @@
 
             <div class="flex justify-between items-center mb-8">
 
-                <h1 id="title" class="text-3xl font-bold"></h1>
+                <h1 id="title" class="text-3xl font-bold">Vanemahüvitise kalkulaator</h1>
 
-                <nav id="languageNav" class="flex gap-3" aria-label="Language and display options">
+                <nav id="languageNav" class="flex gap-3" aria-label="Keele ja kuvamise valikud">
 
                     <button id="langEnBtn" type="button" onclick="setLanguage('en')"
                         class="text-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                        aria-label="Switch to English" title="Switch to English">🇬🇧</button>
+                        aria-label="Lülita inglise keelele" aria-pressed="false"
+                        title="Lülita inglise keelele">🇬🇧</button>
                     <button id="langEtBtn" type="button" onclick="setLanguage('et')"
                         class="text-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                        aria-label="Switch to Estonian" title="Switch to Estonian">🇪🇪</button>
+                        aria-label="Lülita eesti keelele" aria-pressed="true" title="Lülita eesti keelele">🇪🇪</button>
                     <button id="themeToggleBtn" type="button" onclick="toggleDarkMode()"
                         class="text-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                        aria-pressed="false" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+                        aria-pressed="false" aria-label="Lülita tumedale režiimile"
+                        title="Lülita tumedale režiimile">🌙</button>
 
                 </nav>
 
             </div>
 
-            <h2 id="inputSection" class="text-xl font-semibold mb-4"></h2>
+            <h2 id="inputSection" class="text-xl font-semibold mb-4">Sisendandmed</h2>
 
             <form id="benefitForm" novalidate>
 
@@ -51,89 +53,101 @@
 
                     <div>
 
-                        <label id="salaryLabel" for="salary" class="font-medium"></label>
+                        <label id="salaryLabel" for="salary" class="font-medium">Brutokuupalk (€)</label>
 
                         <input id="salary" type="number"
                             class="w-full p-3 border rounded-lg text-black mt-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                             placeholder="3000" required aria-describedby="salaryHelp salaryError">
 
-                        <p id="salaryHelp" class="text-sm text-gray-700 dark:text-gray-300 mt-1"></p>
+                        <p id="salaryHelp" class="text-sm text-gray-700 dark:text-gray-300 mt-1">Brutokuupalk enne
+                            maksude mahaarvamist.</p>
                         <p id="salaryError" class="hidden text-sm text-rose-600 mt-1"></p>
 
                     </div>
 
-                    <div>
+                    <h2 id="inputSection" class="text-xl font-semibold mb-4"></h2>
 
-                        <label id="birthLabel" for="birthDate" class="font-medium"></label>
+                    <label id="birthLabel" for="birthDate" class="font-medium">Lapse sünnikuupäev</label>
 
-                        <input id="birthDate" type="date"
-                            class="w-full p-3 border rounded-lg text-black mt-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                            required aria-describedby="birthHelp birthError">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
 
-                        <p id="birthHelp" class="text-sm text-gray-700 dark:text-gray-300 mt-1"></p>
+                        <p id="birthHelp" class="text-sm text-gray-700 dark:text-gray-300 mt-1">Kuupäev, millal laps
+                            sündis.</p>
                         <p id="birthError" class="hidden text-sm text-rose-600 mt-1"></p>
 
                     </div>
 
-                </div>
+                    <h2 id="paymentsTitle" class="text-xl font-semibold mb-4"></h2>
 
-                <div class="flex flex-col md:flex-row gap-4 mb-6">
+                    <div class="overflow-x-auto">
 
-                    <button id="saveBtn" type="button" onclick="saveApplication()"
-                        class="flex-1 bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
-                    </button>
-
-                    <button id="pdfBtn" type="button" onclick="downloadPDF()"
-                        class="flex-1 bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600">
-                    </button>
-
-                </div>
-
-                <div id="statusMessage" role="status" aria-live="polite" aria-atomic="true" tabindex="-1"
-                    class="hidden mb-6 rounded-lg border px-4 py-3 text-sm">
-                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                        <p id="statusText" class="leading-relaxed"></p>
-                        <button id="copyIdBtn" type="button" onclick="copySavedApplicationId()"
-                            class="hidden self-start md:self-auto bg-white/80 text-slate-800 border border-slate-300 rounded-md px-3 py-1.5 text-xs font-semibold hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                        <button id="saveBtn" type="button" onclick="saveApplication()"
+                            class="flex-1 bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 disabled:bg-blue-300 disabled:text-white/80 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                            Salvesta pooleliolev töö
                         </button>
-                    </div>
-                </div>
 
-                <div class="mb-6">
-
-                    <h3 id="restoreTitle" class="font-semibold text-base"></h3>
-                    <p id="restoreSteps" class="text-sm text-gray-700 dark:text-gray-300 mt-1 mb-3"></p>
-
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_auto_auto] gap-3 items-end mb-6">
-
-                    <div>
-
-                        <label id="applicationIdLabel" for="applicationId" class="font-medium"></label>
-
-                        <input id="applicationId" type="number" min="1"
-                            class="w-full p-3 border rounded-lg text-black mt-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                            placeholder="1" aria-describedby="restoreHelp applicationIdError">
-
-                        <p id="restoreHelp" class="text-sm text-gray-700 dark:text-gray-300 mt-1"></p>
-                        <p id="applicationIdError" class="hidden text-sm text-rose-600 mt-1"></p>
+                        <button id="pdfBtn" type="button" onclick="downloadPDF()"
+                            class="flex-1 bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 disabled:bg-green-300 disabled:text-white/80 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600">
+                            Lae PDF
+                        </button>
 
                     </div>
 
-                    <button id="loadBtn" type="button" onclick="loadApplication()"
-                        class="bg-slate-700 text-white p-3 rounded-lg hover:bg-slate-800 md:min-w-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600">
-                    </button>
+                    <div id="statusMessage" role="status" aria-live="polite" aria-atomic="true" tabindex="-1"
+                        class="hidden mb-6 rounded-lg border px-4 py-3 text-sm">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                            <p id="statusText" class="leading-relaxed"></p>
+                            <button id="copyIdBtn" type="button" onclick="copySavedApplicationId()"
+                                class="hidden self-start md:self-auto bg-white/80 text-slate-800 border border-slate-300 rounded-md px-3 py-1.5 text-xs font-semibold hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                            </button>
 
-                    <button id="loadLastBtn" type="button" onclick="loadLastSavedApplication()"
-                        class="bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 md:min-w-48 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                    </button>
+                            <button id="pdfBtn" type="button" onclick="downloadPDF()"
+                                class="flex-1 bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 disabled:bg-green-300 disabled:text-white/80 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600">
+                            </button>
 
-                </div>
+                            <h3 id="restoreTitle" class="font-semibold text-base">Jätka salvestatud avaldusega</h3>
+                            <p id="restoreSteps" class="text-sm text-gray-700 dark:text-gray-300 mt-1 mb-3">Samm 1:
+                                Sisesta avalduse ID. Samm 2: Vajuta "Laadi salvestatud avaldus".</p>
+
+                            <tr>
+                                <th id="monthHeader" scope="col" class="p-2"></th>
+                                <th id="yearHeader" scope="col" class="p-2"></th>
+                                <th id="daysHeader" scope="col" class="p-2"></th>
+                                <th id="paymentHeader" scope="col" class="p-2"></th>
+                            </tr>
+
+                            </thead>
+
+                            <tbody id="results"></tbody>
+
+                            <label id="applicationIdLabel" for="applicationId" class="font-medium">Salvestatud avalduse
+                                ID</label>
+
+                            <input id="applicationId" type="number" min="1"
+                                class="w-full p-3 border rounded-lg text-black mt-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                                placeholder="1" aria-describedby="restoreHelp applicationIdError">
+
+                            <p id="restoreHelp" class="text-sm text-gray-700 dark:text-gray-300 mt-1">Sisesta avalduse
+                                ID, et salvestatud andmed taastada.</p>
+                            <p id="applicationIdError" class="hidden text-sm text-rose-600 mt-1"></p>
+
+                        </div>
+
+                        <button id="loadBtn" type="button" onclick="loadApplication()"
+                            class="bg-slate-700 text-white p-3 rounded-lg hover:bg-slate-800 disabled:bg-slate-400 disabled:text-white/80 disabled:cursor-not-allowed md:min-w-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600">
+                            Laadi salvestatud avaldus
+                        </button>
+
+                        <button id="loadLastBtn" type="button" onclick="loadLastSavedApplication()"
+                            class="bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 md:min-w-48 disabled:bg-indigo-300 disabled:text-white/80 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                            Laadi viimane salvestus
+                        </button>
+
+                    </div>
 
             </form>
 
-            <h2 id="summaryTitle" class="text-xl font-semibold mb-4"></h2>
+            <h2 id="summaryTitle" tabindex="-1" class="text-xl font-semibold mb-4">Arvutuse kokkuvõte</h2>
 
             <div id="summary" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 hidden">
 
@@ -159,107 +173,41 @@
 
             </div>
 
-            <h2 id="paymentsTitle" class="text-xl font-semibold mb-4"></h2>
+            <h2 id="paymentsTitle" class="text-xl font-semibold mb-4">Väljamaksed kuude kaupa</h2>
 
             <div class="overflow-x-auto">
 
-                <button id="saveBtn" type="button" onclick="saveApplication()"
-                    class="flex-1 bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 disabled:bg-blue-300 disabled:text-white/80 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
-                </button>
+                <table class="w-full border min-w-[560px]">
 
-                <button id="pdfBtn" type="button" onclick="downloadPDF()"
-                    class="flex-1 bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 disabled:bg-green-300 disabled:text-white/80 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600">
-                </button>
+                    <caption id="paymentsCaption" class="sr-only">Parental benefit payments by month</caption>
 
-                <thead class="bg-gray-200 dark:bg-gray-700">
+                    <thead class="bg-gray-200 dark:bg-gray-700">
 
-                    <tr>
-                        <th id="monthHeader" scope="col" class="p-2"></th>
-                        <th id="yearHeader" scope="col" class="p-2"></th>
-                        <th id="daysHeader" scope="col" class="p-2"></th>
-                        <th id="paymentHeader" scope="col" class="p-2"></th>
-                    </tr>
+                        <tr>
+                            <th id="monthHeader" scope="col" class="p-2">Kuu</th>
+                            <th id="yearHeader" scope="col" class="p-2">Aasta</th>
+                            <th id="daysHeader" scope="col" class="p-2">Makstud päevad</th>
+                            <th id="paymentHeader" scope="col" class="p-2">Väljamakse (€)</th>
+                        </tr>
 
-                </thead>
+                    </thead>
 
-                <tbody id="results"></tbody>
+                    <tbody id="results"></tbody>
 
                 </table>
 
             </div>
 
-            <button id="loadBtn" type="button" onclick="loadApplication()"
-                class="bg-slate-700 text-white p-3 rounded-lg hover:bg-slate-800 disabled:bg-slate-400 disabled:text-white/80 disabled:cursor-not-allowed md:min-w-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600">
-            </button>
+            <h3 id="total" class="text-right font-bold mt-3"></h3>
 
-            <button id="loadLastBtn" type="button" onclick="loadLastSavedApplication()"
-                class="bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 md:min-w-48 disabled:bg-indigo-300 disabled:text-white/80 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-            </button>
+            <h2 id="chartTitle" class="text-xl font-semibold mt-10 mb-4">Väljamaksete graafik</h2>
 
-        </div>
+            <p id="chartHelp" class="text-sm text-gray-700 dark:text-gray-300 mb-3">Graafik annab visuaalse kokkuvõtte
+                kuumaksetest. Samad väärtused on olemas ülal olevas väljamaksete tabelis.</p>
 
-        </form>
-
-        <h2 id="summaryTitle" tabindex="-1" class="text-xl font-semibold mb-4"></h2>
-
-        <div id="summary" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 hidden">
-
-            <div class="bg-blue-100 p-4 rounded-lg text-center text-black">
-                <p id="salaryCardLabel" class="text-sm"></p>
-                <p id="summarySalary" class="font-bold"></p>
-            </div>
-
-            <div class="bg-blue-100 p-4 rounded-lg text-center text-black">
-                <p id="dailyCardLabel" class="text-sm"></p>
-                <p id="summaryDaily" class="font-bold"></p>
-            </div>
-
-            <div class="bg-blue-100 p-4 rounded-lg text-center text-black">
-                <p id="capCardLabel" class="text-sm"></p>
-                <p id="summaryCap" class="font-bold"></p>
-            </div>
-
-            <div class="bg-blue-100 p-4 rounded-lg text-center text-black">
-                <p id="totalCardLabel" class="text-sm"></p>
-                <p id="summaryTotal" class="font-bold"></p>
-            </div>
-
-        </div>
-
-        <h2 id="paymentsTitle" class="text-xl font-semibold mb-4"></h2>
-
-        <div class="overflow-x-auto">
-
-            <table class="w-full border min-w-[560px]">
-
-                <caption id="paymentsCaption" class="sr-only">Parental benefit payments by month</caption>
-
-                <thead class="bg-gray-200 dark:bg-gray-700">
-
-                    <tr>
-                        <th id="monthHeader" scope="col" class="p-2"></th>
-                        <th id="yearHeader" scope="col" class="p-2"></th>
-                        <th id="daysHeader" scope="col" class="p-2"></th>
-                        <th id="paymentHeader" scope="col" class="p-2"></th>
-                    </tr>
-
-                </thead>
-
-                <tbody id="results"></tbody>
-
-            </table>
-
-        </div>
-
-        <h3 id="total" class="text-right font-bold mt-3"></h3>
-
-        <h2 id="chartTitle" class="text-xl font-semibold mt-10 mb-4"></h2>
-
-        <p id="chartHelp" class="text-sm text-gray-700 dark:text-gray-300 mb-3"></p>
-
-        <canvas id="benefitChart" role="img" aria-label="Monthly parental benefit bar chart"
-            aria-describedby="chartSummary"></canvas>
-        <p id="chartSummary" class="sr-only" aria-live="polite"></p>
+            <canvas id="benefitChart" role="img" aria-label="Monthly parental benefit bar chart"
+                aria-describedby="chartSummary"></canvas>
+            <p id="chartSummary" class="sr-only" aria-live="polite"></p>
 
         </div>
 
@@ -788,7 +736,7 @@
                 const tr = document.createElement("tr")
 
                 tr.innerHTML = `
-<td class="p-2">${months[row.month - 1]}</td>
+<th scope="row" class="p-2 font-medium">${months[row.month - 1]}</th>
 <td class="p-2 text-center">${row.year}</td>
 <td class="p-2 text-center">${row.daysPaid}</td>
 <td class="p-2 text-right">${formatCurrency(payment)}</td>

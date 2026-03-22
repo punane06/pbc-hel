@@ -8,6 +8,11 @@
     <title>Parental Benefit Calculator</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = { darkMode: "class" }
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
@@ -52,22 +57,44 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
 
                     <div>
-                        <label id="salaryLabel" for="salary" class="font-medium">Brutokuupalk (€)</label>
-                        <input id="salary" type="number"
-                            class="w-full p-3 border rounded-lg text-black mt-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                            placeholder="3000" required aria-describedby="salaryHelp salaryError">
-                        <p id="salaryHelp" class="text-sm text-gray-700 dark:text-gray-300 mt-1">Brutokuupalk enne
-                            maksude mahaarvamist.</p>
+                        <label id="salaryLabel" for="salary" class="font-medium text-gray-900 dark:text-gray-100">
+                            Brutokuupalk (€)
+                        </label>
+
+                        <input id="salary" type="number" class="w-full p-3 rounded-lg 
+               border border-gray-300 dark:border-gray-600
+               bg-gray-100 dark:bg-gray-800
+               text-gray-900 dark:text-gray-100
+               mt-1
+               focus-visible:outline focus-visible:outline-2 
+               focus-visible:outline-offset-2 focus-visible:outline-blue-600" placeholder="3000" required
+                            aria-describedby="salaryHelp salaryError">
+
+                        <p id="salaryHelp" class="text-sm text-gray-700 dark:text-gray-400 mt-1">
+                            Brutokuupalk enne maksude mahaarvamist.
+                        </p>
+
                         <p id="salaryError" class="hidden text-sm text-rose-600 mt-1"></p>
                     </div>
 
                     <div>
-                        <label id="birthLabel" for="birthDate" class="font-medium">Lapse sünnikuupäev</label>
-                        <input id="birthDate" type="date"
-                            class="w-full p-3 border rounded-lg text-black mt-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                            required aria-describedby="birthHelp birthDateError" />
-                        <p id="birthHelp" class="text-sm text-gray-700 dark:text-gray-300 mt-1">Vali kuupäev alates
-                            tänasest (pp.kk.aaaa).</p>
+                        <label id="birthLabel" for="birthDate" class="font-medium text-gray-900 dark:text-gray-100">
+                            Lapse sünnikuupäev
+                        </label>
+
+                        <input id="birthDate" type="date" class="w-full p-3 rounded-lg 
+               border border-gray-300 dark:border-gray-600
+               bg-gray-100 dark:bg-gray-800
+               text-gray-900 dark:text-gray-100
+               mt-1
+               focus-visible:outline focus-visible:outline-2 
+               focus-visible:outline-offset-2 focus-visible:outline-blue-600" required
+                            aria-describedby="birthHelp birthDateError" />
+
+                        <p id="birthHelp" class="text-sm text-gray-700 dark:text-gray-400 mt-1">
+                            Vali kuupäev alates tänasest (pp.kk.aaaa).
+                        </p>
+
                         <p id="birthDateError" class="hidden text-sm text-rose-600 mt-1"></p>
                     </div>
 
@@ -94,27 +121,49 @@
                     </button>
                 </div>
 
-                <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-8">
-                    <h3 id="restoreTitle" class="font-semibold text-base mb-2">Jätka salvestatud avaldusega</h3>
-                    <p id="restoreSteps" class="text-sm text-gray-700 dark:text-gray-300 mt-1 mb-3">Samm 1: Sisesta
-                        avalduse ID. Samm 2: Vajuta "Laadi salvestatud avaldus".</p>
+                <div class="bg-gray-50 dark:bg-gray-800/60 rounded-xl p-4 mb-8">
+                    <h3 id="restoreTitle" class="font-semibold text-base text-gray-900 dark:text-gray-100 mb-2">
+                        Jätka salvestatud avaldusega
+                    </h3>
+
+                    <p id="restoreSteps" class="text-sm text-gray-700 dark:text-gray-300 mt-1 mb-3">
+                        Samm 1: Sisesta avalduse ID. Samm 2: Vajuta "Laadi salvestatud avaldus".
+                    </p>
+
                     <div class="flex flex-wrap gap-3 items-end">
                         <div class="flex-1 min-w-[200px]">
-                            <label id="applicationIdLabel" for="applicationId" class="font-medium">Salvestatud avalduse
-                                ID</label>
-                            <input id="applicationId" type="number" min="1"
-                                class="w-full p-3 border rounded-lg text-black mt-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                                placeholder="1" aria-describedby="restoreHelp applicationIdError">
-                            <p id="restoreHelp" class="text-sm text-gray-700 dark:text-gray-300 mt-1">Sisesta avalduse
-                                ID, et salvestatud andmed taastada.</p>
+                            <label id="applicationIdLabel" for="applicationId"
+                                class="font-medium text-gray-900 dark:text-gray-100">
+                                Salvestatud avalduse ID
+                            </label>
+
+                            <input id="applicationId" type="number" min="1" class="w-full p-3 rounded-lg 
+                       border border-gray-300 dark:border-gray-600
+                       bg-gray-100 dark:bg-gray-800
+                       text-gray-900 dark:text-gray-100
+                       mt-1
+                       focus-visible:outline focus-visible:outline-2 
+                       focus-visible:outline-offset-2 focus-visible:outline-blue-600" placeholder="1"
+                                aria-describedby="restoreHelp applicationIdError">
+
+                            <p id="restoreHelp" class="text-sm text-gray-700 dark:text-gray-300 mt-1">
+                                Sisesta avalduse ID, et salvestatud andmed taastada.
+                            </p>
+
                             <p id="applicationIdError" class="hidden text-sm text-rose-600 mt-1"></p>
                         </div>
+
                         <button id="loadBtn" type="button" onclick="loadApplication()"
-                            class="bg-slate-700 text-white p-3 rounded-lg hover:bg-slate-800 disabled:bg-slate-400 disabled:text-white/80 disabled:cursor-not-allowed md:min-w-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600">
+                            class="bg-slate-700 text-white p-3 rounded-lg hover:bg-slate-800 
+                   disabled:bg-slate-400 disabled:text-white/80 disabled:cursor-not-allowed 
+                   md:min-w-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600">
                             Laadi salvestatud avaldus
                         </button>
+
                         <button id="loadLastBtn" type="button" onclick="loadLastSavedApplication()"
-                            class="bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 md:min-w-48 disabled:bg-indigo-300 disabled:text-white/80 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                            class="bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 
+                   md:min-w-48 disabled:bg-indigo-300 disabled:text-white/80 disabled:cursor-not-allowed 
+                   focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                             Laadi viimane salvestus
                         </button>
                     </div>
@@ -152,19 +201,32 @@
 
             <div class="overflow-x-auto">
 
-                <table class="w-full border min-w-[560px]">
+                <table
+                    class="w-full min-w-[560px] bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700">
+
 
                     <caption id="paymentsCaption" class="sr-only">Parental benefit payments by month</caption>
 
-                    <thead class="bg-gray-200 dark:bg-gray-700">
+                    <thead class="bg-gray-200 dark:bg-gray-700 sticky top-0 z-10">
 
-                        <tr>
-                            <th id="monthHeader" scope="col" class="p-2">Kuu</th>
-                            <th id="yearHeader" scope="col" class="p-2">Aasta</th>
-                            <th id="daysHeader" scope="col" class="p-2">Makstud päevad</th>
-                            <th id="paymentHeader" scope="col" class="p-2">Väljamakse (€)</th>
+                        <tr class="sticky top-0 z-10 bg-gray-200 dark:bg-gray-700">
+                            <th id="monthHeader" scope="col"
+                                class="p-2 font-semibold text-gray-900 dark:text-gray-100 border-b border-gray-300 dark:border-gray-600">
+                                Kuu
+                            </th>
+                            <th id="yearHeader" scope="col"
+                                class="p-2 font-semibold text-gray-900 dark:text-gray-100 border-b border-gray-300 dark:border-gray-600">
+                                Aasta
+                            </th>
+                            <th id="daysHeader" scope="col"
+                                class="p-2 font-semibold text-gray-900 dark:text-gray-100 border-b border-gray-300 dark:border-gray-600">
+                                Makstud päevad
+                            </th>
+                            <th id="paymentHeader" scope="col"
+                                class="p-2 font-semibold text-gray-900 dark:text-gray-100 border-b border-gray-300 dark:border-gray-600">
+                                Väljamakse (€)
+                            </th>
                         </tr>
-
                     </thead>
 
                     <tbody id="results"></tbody>
@@ -397,15 +459,13 @@
         }
 
         function toggleDarkMode() {
-
-            document.body.classList.toggle("dark")
+            document.documentElement.classList.toggle("dark")
             updateThemeToggleState()
-
         }
 
         function updateThemeToggleState() {
 
-            const isDarkMode = document.body.classList.contains("dark")
+            const isDarkMode = document.documentElement.classList.contains("dark")
             const themeToggleBtn = document.getElementById("themeToggleBtn")
             const themeLabel = isDarkMode
                 ? translations[currentLanguage].themeToggleLight
@@ -719,10 +779,23 @@
                 const tr = document.createElement("tr")
 
                 tr.innerHTML = `
-<th scope="row" class="p-2 font-medium">${months[row.month - 1]}</th>
-<td class="p-2 text-center">${row.year}</td>
-<td class="p-2 text-center">${row.daysPaid}</td>
-<td class="p-2 text-right">${formatCurrency(payment)}</td>
+<th scope="row"
+    class="p-2 font-medium bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-gray-700">
+    ${months[row.month - 1]}
+</th>
+
+<td class="p-2 text-center bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-gray-700">
+    ${row.year}
+</td>
+
+<td class="p-2 text-center bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-gray-700">
+    ${row.daysPaid}
+</td>
+
+<td class="p-2 text-right bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-gray-700">
+    ${formatCurrency(payment)}
+</td>
+
 `
 
                 table.appendChild(tr)

@@ -51,7 +51,8 @@ function setLanguage(lang) {
 }
 
 function toggleDarkMode() {
-    document.body.classList.toggle("dark");
+    console.log("Dark mode toggled!");
+    document.documentElement.classList.toggle("dark");
 }
 
 function formatCurrency(value) {

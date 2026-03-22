@@ -56,17 +56,19 @@
                         <input id="salary" type="number"
                             class="w-full p-3 border rounded-lg text-black mt-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                             placeholder="3000" required aria-describedby="salaryHelp salaryError">
-                        <p id="salaryHelp" class="text-sm text-gray-700 dark:text-gray-300 mt-1">Brutokuupalk enne maksude mahaarvamist.</p>
+                        <p id="salaryHelp" class="text-sm text-gray-700 dark:text-gray-300 mt-1">Brutokuupalk enne
+                            maksude mahaarvamist.</p>
                         <p id="salaryError" class="hidden text-sm text-rose-600 mt-1"></p>
                     </div>
 
                     <div>
                         <label id="birthLabel" for="birthDate" class="font-medium">Lapse sünnikuupäev</label>
-                        <input id="birthDate" type="date" lang="et-EE" title="Vali kuupäev (pp.kk.aaaa)"
+                        <input id="birthDate" type="date"
                             class="w-full p-3 border rounded-lg text-black mt-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                            required aria-describedby="birthHelp birthError">
-                        <p id="birthHelp" class="text-sm text-gray-700 dark:text-gray-300 mt-1">Vali kuupäev alates tänasest (pp.kk.aaaa).</p>
-                        <p id="birthError" class="hidden text-sm text-rose-600 mt-1"></p>
+                            required aria-describedby="birthHelp birthDateError" />
+                        <p id="birthHelp" class="text-sm text-gray-700 dark:text-gray-300 mt-1">Vali kuupäev alates
+                            tänasest (pp.kk.aaaa).</p>
+                        <p id="birthDateError" class="hidden text-sm text-rose-600 mt-1"></p>
                     </div>
 
                 </div>
@@ -94,14 +96,17 @@
 
                 <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-8">
                     <h3 id="restoreTitle" class="font-semibold text-base mb-2">Jätka salvestatud avaldusega</h3>
-                    <p id="restoreSteps" class="text-sm text-gray-700 dark:text-gray-300 mt-1 mb-3">Samm 1: Sisesta avalduse ID. Samm 2: Vajuta "Laadi salvestatud avaldus".</p>
+                    <p id="restoreSteps" class="text-sm text-gray-700 dark:text-gray-300 mt-1 mb-3">Samm 1: Sisesta
+                        avalduse ID. Samm 2: Vajuta "Laadi salvestatud avaldus".</p>
                     <div class="flex flex-wrap gap-3 items-end">
                         <div class="flex-1 min-w-[200px]">
-                            <label id="applicationIdLabel" for="applicationId" class="font-medium">Salvestatud avalduse ID</label>
+                            <label id="applicationIdLabel" for="applicationId" class="font-medium">Salvestatud avalduse
+                                ID</label>
                             <input id="applicationId" type="number" min="1"
                                 class="w-full p-3 border rounded-lg text-black mt-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                                 placeholder="1" aria-describedby="restoreHelp applicationIdError">
-                            <p id="restoreHelp" class="text-sm text-gray-700 dark:text-gray-300 mt-1">Sisesta avalduse ID, et salvestatud andmed taastada.</p>
+                            <p id="restoreHelp" class="text-sm text-gray-700 dark:text-gray-300 mt-1">Sisesta avalduse
+                                ID, et salvestatud andmed taastada.</p>
                             <p id="applicationIdError" class="hidden text-sm text-rose-600 mt-1"></p>
                         </div>
                         <button id="loadBtn" type="button" onclick="loadApplication()"

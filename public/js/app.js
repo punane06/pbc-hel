@@ -62,13 +62,18 @@ function formatCurrency(value) {
 }
 
 function convertDate(date) {
-    const [year, month, day] = date.split("-");
+    const parsed = new Date(date);
+    const day = String(parsed.getDate()).padStart(2, "0");
+    const month = String(parsed.getMonth() + 1).padStart(2, "0");
+    const year = parsed.getFullYear();
     return `${day}.${month}.${year}`;
 }
 
 function convertStoredDateToInput(date) {
     const [day, month, year] = date.split(".");
-    return `${year}-${month}-${day}`;
+    const dd = day.padStart(2, "0");
+    const mm = month.padStart(2, "0");
+    return `${year}-${mm}-${dd}`;
 }
 
 function getFormValues() {

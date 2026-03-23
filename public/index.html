@@ -92,7 +92,7 @@
                             aria-describedby="birthHelp birthDateError" />
 
                         <p id="birthHelp" class="text-sm text-gray-700 dark:text-gray-400 mt-1">
-                            Vali kuupäev alates tänasest (pp.kk.aaaa).
+                            Vali lapse sünnikuupäev (pp.kk.aaaa).
                         </p>
 
                         <p id="birthDateError" class="hidden text-sm text-rose-600 mt-1"></p>
@@ -272,7 +272,7 @@
                 salary: "Gross Monthly Salary (€)",
                 salaryHelp: "Salary before taxes.",
                 birth: "Baby Birth Date",
-                birthHelp: "Choose a date from today onward (dd.mm.yyyy).",
+                birthHelp: "Choose the baby's birth date (dd.mm.yyyy).",
                 save: "Save Progress",
                 saveLoading: "Saving...",
                 pdf: "Download PDF",
@@ -307,7 +307,7 @@
                 salaryRequired: "Enter a gross monthly salary.",
                 salaryInvalid: "Salary must be a positive number.",
                 birthDateRequired: "Select the baby's birth date.",
-                birthDateFuture: "Birth date cannot be in the past.",
+                birthDateFuture: "Birth date cannot be in the future.",
                 statusSaved: "Progress saved. Application ID: {id}. Enter this ID below and select \"Load Saved Application\" to continue later.",
                 statusLoaded: "Saved application #{id} loaded successfully.",
                 statusNotFound: "No saved application was found with ID #{id}.",
@@ -335,7 +335,7 @@
                 salary: "Brutokuupalk (€)",
                 salaryHelp: "Brutokuupalk enne maksude mahaarvamist.",
                 birth: "Lapse sünnikuupäev",
-                birthHelp: "Vali kuupäev alates tänasest (pp.kk.aaaa).",
+                birthHelp: "Vali lapse sünnikuupäev (pp.kk.aaaa).",
                 save: "Salvesta pooleliolev töö",
                 saveLoading: "Salvestan...",
                 pdf: "Lae PDF",
@@ -370,7 +370,7 @@
                 salaryRequired: "Sisesta brutokuupalk.",
                 salaryInvalid: "Palk peab olema positiivne number.",
                 birthDateRequired: "Vali lapse sünnikuupäev.",
-                birthDateFuture: "Sünnikuupäev ei saa olla minevikus.",
+                birthDateFuture: "Sünnikuupäev ei saa olla tulevikus.",
                 statusSaved: "Andmed on salvestatud. Avalduse ID: {id}. Hiljem jätkamiseks sisesta ID allpool ja vajuta \"Laadi salvestatud avaldus\".",
                 statusLoaded: "Salvestatud avaldus #{id} on edukalt laaditud.",
                 statusNotFound: "Avaldust ID-ga #{id} ei leitud.",
@@ -551,15 +551,6 @@
             if (!birthDateRaw) {
                 setFieldError("birthDate", t.birthDateRequired)
                 isValid = false
-            } else {
-                const selectedDate = new Date(`${birthDateRaw}T00:00:00`)
-                const today = new Date()
-                today.setHours(0, 0, 0, 0)
-
-                if (selectedDate < today) {
-                    setFieldError("birthDate", t.birthDateFuture)
-                    isValid = false
-                }
             }
 
             return isValid
@@ -1055,7 +1046,6 @@
             setFieldError("salary")
             calculate()
         })
-        document.getElementById("birthDate").min = new Date().toISOString().split("T")[0]
         document.getElementById("birthDate").addEventListener("input", () => {
             setFieldError("birthDate")
             calculate()

@@ -334,6 +334,12 @@ With more time the following could be added:
 
 ---
 
-## Author
+## Challenge Context & Team
 
-Project created as part of a technical coding task.
+This project was developed as a technical challenge for the JobFair event (Helmes). The goal was to demonstrate clean code, robust business logic, accessibility, security, and modern engineering practices in a collaborative team setting.
+
+**Team members:**
+- Serle Tali (Team Lead)
+- Piret Maricic
+- Kati-Helen Peegel
+- Kadi Kerner

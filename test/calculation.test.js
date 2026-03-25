@@ -3,11 +3,9 @@ const assert = require("node:assert/strict");
 
 process.env.DB_PATH = ":memory:";
 
-const {
-    calculateBenefits,
-    isValidDateString,
-    validateCalculationInput
-} = require("../server");
+
+const { calculateBenefits } = require("../services/benefitCalculator");
+const { isValidDateString, validateCalculationInput } = require("../middleware/validation");
 
 test("calculateBenefits returns 12 monthly rows", () => {
     const rows = calculateBenefits(3000, "15.03.2026");

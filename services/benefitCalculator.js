@@ -1,4 +1,5 @@
-const SALARY_CAP = 4000;
+
+const { MIN_MONTHLY_BENEFIT, MAX_MONTHLY_BENEFIT } = require("./benefitRules");
 
 function parseDate(dateString) {
     const parts = dateString.split(".");
@@ -11,8 +12,16 @@ function parseDate(dateString) {
 }
 
 function calculateBenefits(salary, birthDate) {
-    const cappedSalary = Math.min(salary, SALARY_CAP);
-    const dailyRate = cappedSalary / 30;
+    // Clamp salary to min/max benefit rules
+    let effectiveSalary = salary;
+    let useMin = false;
+    if (salary < MIN_MONTHLY_BENEFIT) {
+        effectiveSalary = MIN_MONTHLY_BENEFIT;
+        useMin = true;
+    } else if (salary > MAX_MONTHLY_BENEFIT) {
+        effectiveSalary = MAX_MONTHLY_BENEFIT;
+    }
+    const dailyRate = effectiveSalary / 30;
 
     const results = [];
     const date = parseDate(birthDate);
@@ -23,7 +32,12 @@ function calculateBenefits(salary, birthDate) {
 
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         const daysPaid = i === 0 ? daysInMonth - date.getDate() + 1 : daysInMonth;
-        const payment = dailyRate * daysPaid;
+        let payment;
+        if (useMin) {
+            payment = MIN_MONTHLY_BENEFIT;
+        } else {
+            payment = dailyRate * daysPaid;
+        }
 
         results.push({
             year,
@@ -40,20 +54,29 @@ function calculateBenefits(salary, birthDate) {
 }
 
 function calculateSummary(salary, rows) {
-    const cappedSalary = Math.min(salary, SALARY_CAP);
-    const dailyRate = cappedSalary / 30;
+    let effectiveSalary = salary;
+    let capApplied = false;
+    let minApplied = false;
+    if (salary < MIN_MONTHLY_BENEFIT) {
+        effectiveSalary = MIN_MONTHLY_BENEFIT;
+        minApplied = true;
+    } else if (salary > MAX_MONTHLY_BENEFIT) {
+        effectiveSalary = MAX_MONTHLY_BENEFIT;
+        capApplied = true;
+    }
+    const dailyRate = effectiveSalary / 30;
     const totalBenefit = Number(rows.reduce((sum, row) => sum + row.payment, 0).toFixed(2));
 
     return {
-        cappedSalary,
+        cappedSalary: effectiveSalary,
         dailyRate: Number(dailyRate.toFixed(4)),
-        capApplied: salary > SALARY_CAP,
+        capApplied,
+        minApplied,
         totalBenefit
     };
 }
 
 module.exports = {
-    SALARY_CAP,
     parseDate,
     calculateBenefits,
     calculateSummary

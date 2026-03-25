@@ -17,7 +17,7 @@ function createApplicationsRouter(db) {
             [salary, birthDate],
             function onInsert(err) {
                 if (err) {
-                    res.status(500).json(err);
+                    res.status(500).json({ error: "Internal server error" });
                     return;
                 }
 
@@ -39,7 +39,7 @@ function createApplicationsRouter(db) {
             [validation.id],
             (err, row) => {
                 if (err) {
-                    res.status(500).json(err);
+                    res.status(500).json({ error: "Internal server error" });
                     return;
                 }
 

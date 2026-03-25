@@ -503,15 +503,28 @@ window.copySavedApplicationId = copySavedApplicationId;
 window.loadApplication = loadApplication;
 window.loadLastSavedApplication = loadLastSavedApplication;
 
-document.getElementById("salary").addEventListener("input", () => {
+
+// Debounce utility
+function debounce(fn, delay) {
+    let timeoutId;
+    return function(...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => fn.apply(this, args), delay);
+    };
+}
+
+const debouncedCalculateSalary = debounce(() => {
     setFieldError("salary");
     calculate();
-});
+}, 400);
 
-document.getElementById("birthDate").addEventListener("input", () => {
+const debouncedCalculateBirthDate = debounce(() => {
     setFieldError("birthDate");
     calculate();
-});
+}, 400);
+
+document.getElementById("salary").addEventListener("input", debouncedCalculateSalary);
+document.getElementById("birthDate").addEventListener("input", debouncedCalculateBirthDate);
 
 document.getElementById("applicationId").addEventListener("input", () => {
     setFieldError("applicationId");
